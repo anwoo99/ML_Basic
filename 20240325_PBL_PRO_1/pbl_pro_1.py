@@ -167,10 +167,12 @@ def Main():
         total_start_time = time.time()  # 전체 러닝 타임 측정을 위한 시작 시간 기록
 
         log(app_name, "Start to grid search..!")
+        ii = 1
 
         # 모든 하이퍼파라미터 조합(product)에 대해 "그리드 서치" 실행
         for epoch, batch_size, lr, ld, hs, af, opt, model_type in product(num_epochs, batch_sizes, learning_rates, layer_depths, hidden_sizes, activation_funcs, optimizers, models):
-            log(app_name, f"Training with Epochs: {epoch}, Batch Size: {batch_size}, Learning Rate: {lr}, Layer Depth: {ld}, Hidden Size: {hs}, Activation Function: {af}, Optimizer: {opt.__name__}, Model Type: {model_type}")
+            log(app_name, f"[SEQ({ii:03d})] Training with Epochs: {epoch}, Batch Size: {batch_size}, Learning Rate: {lr}, Layer Depth: {ld}, Hidden Size: {hs}, Activation Function: {af}, Optimizer: {opt.__name__}, Model Type: {model_type}")
+            ii += 1
 
             if model_type == 'mlp':
                 model = MLP(input_size=28*28, hidden_size=hs, output_size=10, layer_depth=ld, activation_func=af)
@@ -178,9 +180,6 @@ def Main():
                 continue
             else:
                 continue
-            
-            # 모델 정보 출력
-            log(app_name, model.summary())
 
             optimizer = opt(model.parameters(), lr=lr)
             train_loader, test_loader = get_loader(batch_size)
@@ -201,7 +200,7 @@ def Main():
 
             epoch_end_time = time.time()  # 현재 실험의 종료 시간 기록
             elapsed_time = timedelta(seconds=epoch_end_time - epoch_start_time)  # 현재 실험의 러닝 타임 계산
-            log(app_name, f"Elapsed Time for Experiment: {elapsed_time}")
+            log(app_name, f"[SEQ({ii:03d})] Elapsed Time for Experiment: {elapsed_time}")
 
         total_end_time = time.time()  # 전체 러닝 타임 측정을 위한 종료 시간 기록
         total_elapsed_time = timedelta(seconds=total_end_time - total_start_time)  # 전체 러닝 타임 계산
