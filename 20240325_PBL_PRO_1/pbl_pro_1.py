@@ -176,7 +176,12 @@ def Main():
                 model = MLP(input_size=28*28, hidden_size=hs, output_size=10, layer_depth=ld, activation_func=af)
             elif model_type == 'cnn':
                 continue
+            else:
+                continue
             
+            # 모델 정보 출력
+            log(app_name, model.summary())
+
             optimizer = opt(model.parameters(), lr=lr)
             train_loader, test_loader = get_loader(batch_size)
 
