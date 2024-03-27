@@ -167,12 +167,12 @@ def Main():
         total_start_time = time.time()  # 전체 러닝 타임 측정을 위한 시작 시간 기록
 
         log(app_name, "Start to grid search..!")
-        ii = 1
+        ii = 0
 
         # 모든 하이퍼파라미터 조합(product)에 대해 "그리드 서치" 실행
         for epoch, batch_size, lr, ld, hs, af, opt, model_type in product(num_epochs, batch_sizes, learning_rates, layer_depths, hidden_sizes, activation_funcs, optimizers, models):
-            log(app_name, f"[SEQ({ii:03d})] Training with Epochs: {epoch}, Batch Size: {batch_size}, Learning Rate: {lr}, Layer Depth: {ld}, Hidden Size: {hs}, Activation Function: {af}, Optimizer: {opt.__name__}, Model Type: {model_type}")
             ii += 1
+            log(app_name, f"[SEQ({ii:03d})] Training with Epochs: {epoch}, Batch Size: {batch_size}, Learning Rate: {lr}, Layer Depth: {ld}, Hidden Size: {hs}, Activation Function: {af}, Optimizer: {opt.__name__}, Model Type: {model_type}")
 
             if model_type == 'mlp':
                 model = MLP(input_size=28*28, hidden_size=hs, output_size=10, layer_depth=ld, activation_func=af)
