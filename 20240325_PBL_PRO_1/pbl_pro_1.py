@@ -304,7 +304,7 @@ def Main():
         """
         HyperParameter 설정
         """
-        num_epochs = [10, 20, 30]
+        num_epochs = [5]
         batch_sizes = [32, 64, 128, 256]
         learning_rates = [0.1, 0.01, 0.001, 0.0001]
         layer_depths = [2, 3, 4, 5]
