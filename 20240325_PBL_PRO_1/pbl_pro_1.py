@@ -13,6 +13,7 @@ from itertools import product
 from datetime import datetime, timedelta
 
 APP_NAME = "PBL_PRO_1"
+DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 """
 모델 Class 정의
@@ -202,6 +203,8 @@ def train(model, train_loader, criterion, optimizer):
 
         for batch_idx, (data, target) in enumerate(train_loader):
             optimizer.zero_grad()  # Gradient 초기화(중첩 방지)
+            data = data.to(DEVICE)  # GPU로 데이터 이동
+            target = target.to(DEVICE)  # GPU로 타겟 이동
             output = model(data)
 
             loss = criterion(output, target)  # 손실함수 적용
@@ -223,7 +226,10 @@ def test(model, test_loader, criterion):
 
         with torch.no_grad():
             for data, target in test_loader:
+                data = data.to(DEVICE)  # GPU로 데이터 이동
+                target = target.to(DEVICE)  # GPU로 타겟 이동
                 output = model(data)
+
                 # 단순 평가이므로 역전파는 실행하지 않음
                 test_loss += criterion(output, target).item()
 
@@ -252,7 +258,8 @@ def run_experiment(ii, epoch, batch_size, lr, ld, hs, af, drr, weight_decay, wei
     else:
         return
 
-    optimizer = opt(model.parameters(), lr=lr, weight_decay=weight_decay)
+    model.to(DEVICE)
+    optimizer = opt(model.parameters(), lr=lr, weight_decay=weight_decay)    
     train_loader, test_loader = get_loader(batch_size)
 
     epoch_start_time = time.time()
@@ -295,10 +302,6 @@ def run_full_experiment(num_epochs, batch_sizes, learning_rates, layer_depths, h
 
 def Main():
     try:
-        """
-        런타임 설정
-        """
-        DEVICE = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
         log(APP_NAME, f'Using PyTorch version: {torch.__version__,} Device: {DEVICE}')
 
         """
